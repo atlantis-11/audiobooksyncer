@@ -14,7 +14,7 @@ pipeline {
                     sh '~/.local/bin/uv pip install behave yt-dlp'
                     sh '''
                         . .venv/bin/activate
-                        behave e2e/ --no-capture
+                        behave e2e/
                     '''
                 }
             }
