@@ -3,8 +3,8 @@ import multiprocessing as mp
 from aeneas.executetask import ExecuteTask
 from aeneas.runtimeconfiguration import RuntimeConfiguration
 from aeneas.syncmap import SyncMapFragment
-from aeneas.task import Task
-from aeneas.textfile import TextFile, TextFragment
+from aeneas.task import Task, TaskConfiguration
+from aeneas.textfile import TextFile
 from tqdm import tqdm
 
 from . import config
@@ -21,16 +21,13 @@ def _split_into_chapters(text_fragments, split_indexes):
 
 
 def _create_task(audio_file, chapter, lang):
-    task = Task(config_string=f'task_language={lang}')
+    task = Task()
+    task.configuration = TaskConfiguration()
     task.audio_file_path_absolute = audio_file
 
     textfile = TextFile()
-
-    id_digits = len(str(len(chapter)))
-    for i, sent in enumerate(chapter, 1):
-        id = 'f' + str(i).zfill(id_digits)
-
-        textfile.add_fragment(TextFragment(id, lang, [sent], [sent]))
+    textfile.read_from_list(chapter)
+    textfile.set_language(lang)
 
     task.text_file = textfile
 
