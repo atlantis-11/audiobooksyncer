@@ -52,6 +52,16 @@ The sync map file contains json array with each element containing part of the t
 ]
 ```
 
-This can be turned into subtitles files with [srt](https://pypi.org/project/srt/).
+Sync map can be converted into subtitles files using:
 
-Or you can use [AudiobookSyncerReader](https://github.com/atlantis-11/AudiobookSyncerReader) app for Android.
+```bash
+python tools/sync_map_to_srt.py syncer_abcd1234/sync_map.json
+```
+
+Usage example:
+
+```bash
+mpv --force-window --merge-files --sub-file=syncer_abcd1234/subtitles.srt audio/*
+```
+
+You can also use [AudiobookSyncerReader](https://github.com/atlantis-11/AudiobookSyncerReader) app for Android.
