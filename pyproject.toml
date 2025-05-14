@@ -15,8 +15,13 @@ dependencies = [
     "openai-whisper @ git+https://github.com/openai/whisper.git@v20231117"
 ]
 
+[project.optional-dependencies]
+srt = ["srt"]
+gui = ["pyqt6", "loguru"]
+
 [project.scripts]
 audiobooksyncer = "audiobooksyncer.scripts.cli:main"
+audiobooksyncer-gui = "audiobooksyncer.scripts.gui:main"
 
 [tool.setuptools.packages.find]
 include = ["audiobooksyncer*"]
