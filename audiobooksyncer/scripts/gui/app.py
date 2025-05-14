@@ -1,3 +1,4 @@
+import os
 import re
 
 from loguru import logger
@@ -40,6 +41,7 @@ class App(QMainWindow):
             InputType.src: None,
             InputType.tgt: None,
             InputType.audio: None,
+            InputType.output: os.getcwd(),
         }
         self.settings = {
             Settings.aeneas_dtw_margin: config.aeneas_dtw_margin,
@@ -59,6 +61,10 @@ class App(QMainWindow):
         self.audio_label, self.audio_btn = self.create_file_selector(
             'Audio dir:', InputType.audio
         )
+        self.output_label, self.output_btn = self.create_file_selector(
+            'Output dir:', InputType.output
+        )
+        self.output_btn.setText(self.inputs[InputType.output])
 
         grid_layout = QGridLayout()
 
@@ -70,6 +76,9 @@ class App(QMainWindow):
 
         grid_layout.addWidget(self.audio_label, 2, 0)
         grid_layout.addWidget(self.audio_btn, 2, 1)
+
+        grid_layout.addWidget(self.output_label, 3, 0)
+        grid_layout.addWidget(self.output_btn, 3, 1)
 
         self.step_label = QLabel()
 
@@ -138,6 +147,8 @@ class App(QMainWindow):
             selected = QFileDialog.getExistingDirectory(self)
             if selected and not get_audio_files(selected):
                 error = 'No audio files'
+        elif key == InputType.output:
+            selected = QFileDialog.getExistingDirectory(self)
         else:
             selected, _ = QFileDialog.getOpenFileName(self)
             if selected and not is_text_plain(selected):
@@ -171,6 +182,7 @@ class App(QMainWindow):
             return
 
         self.process = QProcess()
+        self.process.setWorkingDirectory(self.inputs[InputType.output])
         self.process.readyReadStandardOutput.connect(self.handle_stdout)
         self.process.readyReadStandardError.connect(self.handle_stderr)
         self.process.finished.connect(self.process_finished)
