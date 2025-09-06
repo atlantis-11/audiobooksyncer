@@ -56,7 +56,11 @@ def is_text_plain(file_path):
 
 
 def is_audio(file_path):
-    return magic.from_file(file_path, mime=True).split('/')[0] == 'audio'
+    # m4b is detected as video/mp4
+    return (
+        magic.from_file(file_path, mime=True).split('/')[0] == 'audio'
+        or file_path.suffix == '.m4b'
+    )
 
 
 def get_audio_files(dir_path):
