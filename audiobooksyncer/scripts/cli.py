@@ -26,12 +26,23 @@ def _ask_to_continue(skip_confirmation):
 @click.argument('audio_dir', type=click.Path(exists=True, file_okay=False))
 @click.option('--aeneas_processes', type=int)
 @click.option('--aeneas_dtw_margin', type=int)
+@click.option('--aeneas_global_head_length', type=float)
 @click.option('--yes', '-y', is_flag=True)
-def main(src_path, tgt_path, audio_dir, aeneas_processes, aeneas_dtw_margin, yes):
+def main(
+    src_path,
+    tgt_path,
+    audio_dir,
+    aeneas_processes,
+    aeneas_dtw_margin,
+    aeneas_global_head_length,
+    yes,
+):
     if aeneas_processes is not None:
         config.aeneas_processes = aeneas_processes
     if aeneas_dtw_margin is not None:
         config.aeneas_dtw_margin = aeneas_dtw_margin
+    if aeneas_global_head_length is not None:
+        config.aeneas_global_head_length = aeneas_global_head_length
 
     audio_files = get_audio_files(audio_dir)
 

@@ -1,5 +1,6 @@
 import multiprocessing as mp
 
+from aeneas import globalconstants as gc
 from aeneas.executetask import ExecuteTask
 from aeneas.runtimeconfiguration import RuntimeConfiguration
 from aeneas.syncmap import SyncMapFragment
@@ -20,10 +21,15 @@ def _split_into_chapters(text_fragments, split_indexes):
     ]
 
 
-def _create_task(audio_file, chapter, lang):
+def _create_task(idx, audio_file, chapter, lang):
     task = Task()
     task.configuration = TaskConfiguration()
     task.audio_file_path_absolute = audio_file
+
+    if idx == 0:
+        task.configuration[gc.PPN_TASK_IS_AUDIO_FILE_HEAD_LENGTH] = (
+            config.aeneas_global_head_length
+        )
 
     textfile = TextFile()
     textfile.read_from_list(chapter)
@@ -37,7 +43,7 @@ def _create_task(audio_file, chapter, lang):
 def _process_chapter(args):
     idx, audio_file, chapter, lang = args
 
-    task = _create_task(audio_file, chapter, lang)
+    task = _create_task(idx, audio_file, chapter, lang)
     rconf = RuntimeConfiguration()
     rconf[RuntimeConfiguration.DTW_MARGIN] = config.aeneas_dtw_margin
     ExecuteTask(task, rconf=rconf).execute()
@@ -50,6 +56,8 @@ def _process_chapter(args):
         for fr in task.sync_map.fragments
         if fr.fragment_type == SyncMapFragment.REGULAR
     ]
+
+    intervals[0]['begin'] = 0
 
     return idx, intervals
 

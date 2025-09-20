@@ -46,6 +46,7 @@ class App(QMainWindow):
         self.settings = {
             Settings.aeneas_dtw_margin: config.aeneas_dtw_margin,
             Settings.aeneas_processes: config.aeneas_processes,
+            Settings.aeneas_global_head_length: config.aeneas_global_head_length,
         }
         self.processing_state = ProcessingState.NotProcessing
 
