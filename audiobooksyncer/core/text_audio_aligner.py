@@ -21,7 +21,7 @@ def _split_into_chapters(text_fragments, split_indexes):
     ]
 
 
-def _create_task(idx, audio_file, chapter, lang):
+def _create_task(idx, total, audio_file, chapter, lang):
     task = Task()
     task.configuration = TaskConfiguration()
     task.audio_file_path_absolute = audio_file
@@ -29,6 +29,11 @@ def _create_task(idx, audio_file, chapter, lang):
     if idx == 0:
         task.configuration[gc.PPN_TASK_IS_AUDIO_FILE_HEAD_LENGTH] = (
             config.aeneas_global_head_length
+        )
+
+    if idx == total - 1:
+        task.configuration[gc.PPN_TASK_IS_AUDIO_FILE_TAIL_LENGTH] = (
+            config.aeneas_global_tail_length
         )
 
     textfile = TextFile()
@@ -41,9 +46,9 @@ def _create_task(idx, audio_file, chapter, lang):
 
 
 def _process_chapter(args):
-    idx, audio_file, chapter, lang = args
+    idx, total, audio_file, chapter, lang = args
 
-    task = _create_task(idx, audio_file, chapter, lang)
+    task = _create_task(idx, total, audio_file, chapter, lang)
     rconf = RuntimeConfiguration()
     rconf[RuntimeConfiguration.DTW_MARGIN] = config.aeneas_dtw_margin
     ExecuteTask(task, rconf=rconf).execute()
@@ -72,7 +77,7 @@ def align_text_with_audio(text_fragments, split_indexes, audio_files, lang):
         processing_results = pool.imap_unordered(
             _process_chapter,
             [
-                (idx, af, ch, lang)
+                (idx, len(chapters), af, ch, lang)
                 for idx, (af, ch) in enumerate(zip(audio_files, chapters))
             ],
         )

@@ -27,6 +27,7 @@ def _ask_to_continue(skip_confirmation):
 @click.option('--aeneas_processes', type=int)
 @click.option('--aeneas_dtw_margin', type=int)
 @click.option('--aeneas_global_head_length', type=float)
+@click.option('--aeneas_global_tail_length', type=float)
 @click.option('--yes', '-y', is_flag=True)
 def main(
     src_path,
@@ -35,6 +36,7 @@ def main(
     aeneas_processes,
     aeneas_dtw_margin,
     aeneas_global_head_length,
+    aeneas_global_tail_length,
     yes,
 ):
     if aeneas_processes is not None:
@@ -43,6 +45,8 @@ def main(
         config.aeneas_dtw_margin = aeneas_dtw_margin
     if aeneas_global_head_length is not None:
         config.aeneas_global_head_length = aeneas_global_head_length
+    if aeneas_global_tail_length is not None:
+        config.aeneas_global_tail_length = aeneas_global_tail_length
 
     audio_files = get_audio_files(audio_dir)
 

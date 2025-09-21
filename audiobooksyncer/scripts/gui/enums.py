@@ -4,5 +4,11 @@ ActionButtonState = Enum('ActionButtonState', ('Run', 'Next', 'Cancel'))
 ProcessingState = Enum('ProcessingState', ('NotProcessing', 'Processing', 'Waiting'))
 InputType = Enum('InputType', ('src', 'tgt', 'audio', 'output'))
 Settings = Enum(
-    'Settings', ('aeneas_processes', 'aeneas_dtw_margin', 'aeneas_global_head_length')
+    'Settings',
+    (
+        'aeneas_processes',
+        'aeneas_dtw_margin',
+        'aeneas_global_head_length',
+        'aeneas_global_tail_length',
+    ),
 )
