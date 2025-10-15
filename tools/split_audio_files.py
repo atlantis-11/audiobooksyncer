@@ -41,7 +41,7 @@ def main(audio_dir: Path, minutes: int):
             output_file = f.with_name(f'{f.stem}_part{i + 1:02}{f.suffix}')
 
             ffmpeg.input(f, ss=start, t=segment_duration).output(
-                str(output_file), c='copy'
+                str(output_file), c='copy', vn=None
             ).run(quiet=True)
 
         print('Finished splitting')
