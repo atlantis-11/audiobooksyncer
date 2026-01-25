@@ -66,10 +66,8 @@ def _clean_string(string):
 
 
 def _find_start_fragment(text_fragments, anchor_fragment_index, transcription):
-    # margin is set to 3% but no less than 20 fragments
-    # this would allow for almost an hour of deviation
-    # on a 30-hour book
-    window_margin = max(20, int(len(text_fragments) * 0.03))
+    # margin is set to 10% but no less than 20 fragments
+    window_margin = max(20, int(len(text_fragments) * 0.1))
     window_start = max(anchor_fragment_index - window_margin, 0)
     window_end = min(anchor_fragment_index + window_margin, len(text_fragments) - 1)
 
