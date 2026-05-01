@@ -21,13 +21,13 @@ def _ask_to_continue(skip_confirmation):
 
 
 @click.command()
-@click.argument('src_path', type=click.Path(exists=True, dir_okay=False))
-@click.argument('tgt_path', type=click.Path(exists=True, dir_okay=False))
-@click.argument('audio_dir', type=click.Path(exists=True, file_okay=False))
-@click.option('--aeneas_processes', type=int)
-@click.option('--aeneas_dtw_margin', type=int)
-@click.option('--aeneas_global_head_length', type=float)
-@click.option('--aeneas_global_tail_length', type=float)
+@click.argument('src-path', type=click.Path(exists=True, dir_okay=False))
+@click.argument('tgt-path', type=click.Path(exists=True, dir_okay=False))
+@click.argument('audio-dir', type=click.Path(exists=True, file_okay=False))
+@click.option('--aeneas-processes', type=int)
+@click.option('--aeneas-dtw-margin', type=int)
+@click.option('--aeneas-global-head-length', type=float)
+@click.option('--aeneas-global-tail-length', type=float)
 @click.option('--yes', '-y', is_flag=True)
 def main(
     src_path,
