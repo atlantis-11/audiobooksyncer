@@ -41,9 +41,9 @@ As an input provide book's text, translation (plain text files) and a directory 
 python -m audiobooksyncer book_de.txt book_en.txt audiobook/
 ```
 
-The shorter the audio files, the better the result, around an hour is fine. You can set `--aeneas_dtw_margin` for longer files (default is 120 seconds).
+The shorter the audio files, the better the result, around an hour is fine. You can set `--aeneas-dtw-margin` for longer files (default is 120 seconds).
 
-Text to audio sync requires quite a bit of RAM. The audio files are processed in parallel, with the number of processes equal to CPU count by default (can be set with `--aeneas_processes`). RAM is mostly used up in the second part of processing of each file, so if you have several big files with the same duration, this peak might add up.
+Text to audio sync requires quite a bit of RAM. The audio files are processed in parallel, with the number of processes equal to CPU count by default (can be set with `--aeneas-processes`). RAM is mostly used up in the second part of processing of each file, so if you have several big files with the same duration, this peak might add up.
 
 There is also a Docker image, you can run the container using:
 ```bash
