@@ -85,3 +85,17 @@ mpv --force-window --merge-files --sub-file=syncer_abcd1234/subtitles.srt audio/
 ```
 
 You can also use [AudiobookSyncerReader](https://github.com/atlantis-11/AudiobookSyncerReader) app for Android.
+
+## Audio Preparation
+
+`m4b-tool` can be used to split a single m4b into a file per chapter:
+
+```bash
+m4b-tool split --no-conversion book.m4b -o book-dir/
+```
+
+`tools/split_audio_files.py` can be used to split files that are longer than the given duration into multiple files:
+
+```bash
+python -m tools.split_audio_files book-dir/
+```
