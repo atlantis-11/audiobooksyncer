@@ -1,4 +1,6 @@
+import tempfile
 import warnings
+from pathlib import Path
 
 import click
 
@@ -8,7 +10,14 @@ from ..core.output_generator import get_sync_map
 from ..core.text_audio_aligner import align_text_with_audio
 from ..core.texts_aligner import align_texts
 from ..pathstore import PathStore
-from ..utils import cache, get_audio_files, hash_files, is_text_plain, save_to_json
+from ..utils import (
+    cache,
+    get_audio_files,
+    hash_files,
+    is_text_plain,
+    save_to_json,
+    split_audio_file,
+)
 
 warnings.filterwarnings('ignore')
 
@@ -23,7 +32,8 @@ def _ask_to_continue(skip_confirmation):
 @click.command()
 @click.argument('src-path', type=click.Path(exists=True, dir_okay=False))
 @click.argument('tgt-path', type=click.Path(exists=True, dir_okay=False))
-@click.argument('audio-dir', type=click.Path(exists=True, file_okay=False))
+@click.argument('audio-path', type=click.Path(exists=True))
+@click.option('--audio-file-max-duration-minutes', type=int, default=60)
 @click.option('--aeneas-processes', type=int)
 @click.option('--aeneas-dtw-margin', type=int)
 @click.option('--aeneas-global-head-length', type=float)
@@ -32,7 +42,8 @@ def _ask_to_continue(skip_confirmation):
 def main(
     src_path,
     tgt_path,
-    audio_dir,
+    audio_path,
+    audio_file_max_duration_minutes,
     aeneas_processes,
     aeneas_dtw_margin,
     aeneas_global_head_length,
@@ -48,12 +59,6 @@ def main(
     if aeneas_global_tail_length is not None:
         config.aeneas_global_tail_length = aeneas_global_tail_length
 
-    audio_files = get_audio_files(audio_dir)
-
-    if len(audio_files) == 0:
-        print(f'No audio files in {audio_dir}')
-        exit(1)
-
     if not is_text_plain(src_path):
         print(f'{src_path} is not plain text')
         exit(1)
@@ -61,6 +66,24 @@ def main(
     if not is_text_plain(tgt_path):
         print(f'{tgt_path} is not plain text')
         exit(1)
+
+    if Path(audio_path).is_dir():
+        audio_files = get_audio_files(audio_path)
+
+        if len(audio_files) == 0:
+            print(f'No audio files in {audio_path} directory')
+            exit(1)
+    elif audio_file_max_duration_minutes > 0:
+        print(
+            'A single audio file provided, splitting it into multiple files. To disable, use `--audio-file-max-duration-minutes=0`'
+        )
+        tmp_dir = tempfile.TemporaryDirectory()
+        audio_files = split_audio_file(
+            audio_path, audio_file_max_duration_minutes, tmp_dir.name
+        )
+        print()
+    else:
+        audio_files = [audio_path]
 
     paths = PathStore(hash_files(src_path, tgt_path, *audio_files))
 
