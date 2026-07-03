@@ -30,9 +30,13 @@ def _ask_to_continue(skip_confirmation):
 
 
 @click.command()
-@click.argument('src-path', type=click.Path(exists=True, dir_okay=False))
-@click.argument('tgt-path', type=click.Path(exists=True, dir_okay=False))
-@click.argument('audio-path', type=click.Path(exists=True))
+@click.argument(
+    'src-path', type=click.Path(exists=True, dir_okay=False, path_type=Path)
+)
+@click.argument(
+    'tgt-path', type=click.Path(exists=True, dir_okay=False, path_type=Path)
+)
+@click.argument('audio-path', type=click.Path(exists=True, path_type=Path))
 @click.option('--audio-file-max-duration-minutes', type=int, default=60)
 @click.option('--aeneas-processes', type=int)
 @click.option('--aeneas-dtw-margin', type=int)
@@ -67,7 +71,7 @@ def main(
         print(f'{tgt_path} is not plain text')
         exit(1)
 
-    if Path(audio_path).is_dir():
+    if audio_path.is_dir():
         audio_files = get_audio_files(audio_path)
 
         if len(audio_files) == 0:
@@ -85,7 +89,7 @@ def main(
     else:
         audio_files = [audio_path]
 
-    paths = PathStore(hash_files(src_path, tgt_path, *audio_files))
+    paths = PathStore(hash_files(src_path, tgt_path, *audio_files), audio_path)
 
     c_align_texts = cache(paths.aligned_texts)(align_texts)
     c_locate_chapters = cache(paths.chapter_locations)(locate_chapters)
